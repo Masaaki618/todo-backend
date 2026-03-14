@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: todo-backend-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ADDR: 0.0.0.0:8080
+      DATABASE_URL: postgres://todo:todo@db:5432/todo?sslmode=disable
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - go-mod-cache:/go/pkg/mod
+      - air-tmp:/app/tmp
+    working_dir: /app
+    command: air -c .air.toml
+
+  db:
+    image: postgres:16-alpine
+    container_name: todo-backend-db
+    environment:
+      POSTGRES_DB: todo
+      POSTGRES_USER: todo
+      POSTGRES_PASSWORD: todo
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todo -d todo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  go-mod-cache:
+  air-tmp:
+  postgres-data:
