@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+	"os"
 	"todo-backend/controllers"
 	"todo-backend/models"
 	"todo-backend/repositories"
@@ -27,11 +29,13 @@ func main() {
 	group.POST("", itemController.Create)
 	group.PUT("/:id", itemController.Update)
 	group.DELETE("/:id", itemController.Delete)
-	r.Run("localhost:8080") // デフォルトで0.0.0.0:8080で待機します
-	// loggerとrecoveryミドルウェア付きGinルーター作成
 
-	// 簡単なGETエンドポイント定義
+	addr := os.Getenv("APP_ADDR")
+	if addr == "" {
+		addr = "0.0.0.0:8080"
+	}
 
-	// ポート8080でサーバー起動（デフォルト）
-	// 0.0.0.0:8080（Windowsではlocalhost:8080）で待機
+	if err := r.Run(addr); err != nil {
+		log.Fatal(err)
+	}
 }
