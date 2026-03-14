@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: Todo Backend API
+  version: 1.0.0
+  description: Todo item を操作するシンプルな API
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Items
+    description: Todo item API
+paths:
+  /api/v1/items:
+    get:
+      tags:
+        - Items
+      summary: Todo 一覧を取得する
+      operationId: listItems
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemListResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Items
+      summary: Todo を作成する
+      operationId: createItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateItemInput'
+      responses:
+        '200':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/items/{id}:
+    get:
+      tags:
+        - Items
+      summary: Todo を 1 件取得する
+      operationId: getItem
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '404':
+          description: 対象なし
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Items
+      summary: Todo を更新する
+      operationId: updateItem
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemInput'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Items
+      summary: Todo を削除する
+      operationId: deleteItem
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      responses:
+        '200':
+          description: 削除成功
+        '404':
+          description: 対象なし
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  parameters:
+    ItemId:
+      name: id
+      in: path
+      required: true
+      description: Todo item の ID
+      schema:
+        type: integer
+        minimum: 1
+  schemas:
+    Item:
+      type: object
+      required:
+        - id
+        - title
+        - done
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: 筋トレ
+        done:
+          type: boolean
+          example: false
+    CreateItemInput:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 2
+          example: 買い物
+    UpdateItemInput:
+      type: object
+      properties:
+        title:
+          type: string
+          example: ジムに行く
+        done:
+          type: boolean
+          example: true
+    ItemResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/Item'
+    ItemListResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: Item not found

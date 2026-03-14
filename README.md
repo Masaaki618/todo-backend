@@ -30,3 +30,7 @@ DB データも削除して初期化したい場合は次を実行する。
 ```bash
 docker compose down -v
 ```
+
+## OpenAPI
+
+API 仕様は [openapi.yaml](/Users/poi/work/todo/todo-backend/openapi.yaml) に定義している。
