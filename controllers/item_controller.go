@@ -33,6 +33,7 @@ func (i *ItemController) FindAll(ctx *gin.Context) {
 }
 
 func (i *ItemController) FindByID(ctx *gin.Context) {
+	var item *models.Item
 	idStr := ctx.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
