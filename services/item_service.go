@@ -1,6 +1,7 @@
 package services
 
 import (
+	"todo-backend/dto"
 	"todo-backend/models"
 	"todo-backend/repositories"
 )
@@ -8,6 +9,7 @@ import (
 type IItemService interface {
 	FindALL() (*[]models.Item, error)
 	FindByID(id uint) (*models.Item, error)
+	Create(createItemInput dto.CreateItemInput) (*models.Item, error)
 }
 
 type ItemService struct {
@@ -24,4 +26,10 @@ func (s *ItemService) FindALL() (*[]models.Item, error) {
 
 func (s *ItemService) FindByID(id uint) (*models.Item, error) {
 	return s.service.FindByID(id)
+}
+
+func (s *ItemService) Create(createItemInput dto.CreateItemInput) (*models.Item, error) {
+	return s.service.Create(models.Item{
+		Title: createItemInput.Title,
+	})
 }

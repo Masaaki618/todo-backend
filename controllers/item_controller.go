@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"strconv"
+	"todo-backend/dto"
 	"todo-backend/models"
 	"todo-backend/services"
 
@@ -12,6 +13,7 @@ import (
 type IItemController interface {
 	FindAll(c *gin.Context)
 	FindByID(c *gin.Context)
+	Create(c *gin.Context)
 }
 
 type ItemController struct {
@@ -51,4 +53,20 @@ func (i *ItemController) FindByID(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": item})
+}
+
+func (i *ItemController) Create(ctx *gin.Context) {
+	var input dto.CreateItemInput
+	if err := ctx.ShouldBind(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	newItem, err := i.service.Create(input)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": newItem})
 }
