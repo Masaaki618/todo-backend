@@ -26,6 +26,7 @@ func main() {
 	group.GET("/:id", itemController.FindByID)
 	group.POST("", itemController.Create)
 	group.PUT("/:id", itemController.Update)
+	group.DELETE("/:id", itemController.Delete)
 	r.Run("localhost:8080") // デフォルトで0.0.0.0:8080で待機します
 	// loggerとrecoveryミドルウェア付きGinルーター作成
 

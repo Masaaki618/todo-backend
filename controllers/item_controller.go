@@ -15,6 +15,7 @@ type IItemController interface {
 	FindByID(c *gin.Context)
 	Create(c *gin.Context)
 	Update(c *gin.Context)
+	Delete(c *gin.Context)
 }
 
 type ItemController struct {
@@ -88,4 +89,23 @@ func (i *ItemController) Update(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": item})
+}
+
+func (i *ItemController) Delete(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		if err.Error() == "Item not found" {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "Item not found"})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	err = i.service.Delete(uint(id))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.Status(http.StatusOK)
 }

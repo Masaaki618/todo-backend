@@ -10,6 +10,7 @@ type IItemRepository interface {
 	FindByID(id uint) (*models.Item, error)
 	Create(item models.Item) (*models.Item, error)
 	Update(item models.Item) (*models.Item, error)
+	Delete(id uint) error
 }
 
 type ItemMemoryRepository struct {
@@ -47,4 +48,14 @@ func (r *ItemMemoryRepository) Update(upDateItem models.Item) (*models.Item, err
 		}
 	}
 	return nil, errors.New("Item not found")
+}
+
+func (r *ItemMemoryRepository) Delete(id uint) error {
+	for i, item := range r.items {
+		if item.Id == id {
+			r.items = append(r.items[:i], r.items[i+1:]...)
+			return nil
+		}
+	}
+	return errors.New("Item not found")
 }
