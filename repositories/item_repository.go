@@ -1,9 +1,13 @@
 package repositories
 
-import "todo-backend/models"
+import (
+	"errors"
+	"todo-backend/models"
+)
 
 type IItemRepository interface {
 	FindAll() (*[]models.Item, error)
+	FindByID(id uint) (*models.Item, error)
 }
 
 type ItemMemoryRepository struct {
@@ -16,4 +20,13 @@ func NewItemMemoryRepository(items []models.Item) IItemRepository {
 
 func (r *ItemMemoryRepository) FindAll() (*[]models.Item, error) {
 	return &r.items, nil
+}
+
+func (r *ItemMemoryRepository) FindByID(id uint) (*models.Item, error) {
+	for _, item := range r.items {
+		if item.Id == id {
+			return &item, nil
+		}
+	}
+	return nil, errors.New("Item not found")
 }

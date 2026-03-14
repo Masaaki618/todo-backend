@@ -23,6 +23,7 @@ func main() {
 	r := gin.Default()
 	group := r.Group("api/v1/items")
 	group.GET("", itemController.FindAll)
+	group.GET("/:id", itemController.FindByID)
 	r.Run("localhost:8080") // デフォルトで0.0.0.0:8080で待機します
 	// loggerとrecoveryミドルウェア付きGinルーター作成
 
