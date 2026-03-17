@@ -9,7 +9,7 @@ services:
         condition: service_healthy
     environment:
       APP_ADDR: 0.0.0.0:8080
-      DATABASE_URL: postgres://todo:todo@db:5432/todo?sslmode=disable
+      DATABASE_URL: ${DATABASE_URL}
     ports:
       - "8080:8080"
     volumes:
@@ -23,15 +23,15 @@ services:
     image: postgres:16-alpine
     container_name: todo-backend-db
     environment:
-      POSTGRES_DB: todo
-      POSTGRES_USER: todo
-      POSTGRES_PASSWORD: todo
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U todo -d todo" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -41,8 +41,8 @@ services:
     ports:
       - 81:80
     environment:
-      PGADMIN_DEFAULT_EMAIL: gin@example.com
-      PGADMIN_DEFAULT_PASSWORD: ginpassword
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
       - ./docker/pgadmin:/var/lib/pgadmin
     depends_on:
