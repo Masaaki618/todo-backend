@@ -1,7 +1,9 @@
 package models
 
+import "gorm.io/gorm"
+
 type Item struct {
-	Id    uint   `json:"id"`
-	Title string `json:"title"`
-	Done  bool   `json:"done"`
+	gorm.Model
+	Title string `json:"title" gorm:"not null"`
+	Done  bool   `json:"done" gorm:"not null:default:false"`
 }
