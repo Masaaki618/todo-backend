@@ -2,7 +2,7 @@ package routers
 
 import (
 	"todo-backend/controllers"
-	"todo-backend/models"
+	"todo-backend/infra"
 	"todo-backend/repositories"
 	"todo-backend/services"
 
@@ -10,13 +10,15 @@ import (
 )
 
 func NewRouter() *gin.Engine {
-	items := []models.Item{
-		{Id: 1, Title: "筋トレ", Done: false},
-		{Id: 2, Title: "サッカー", Done: true},
-		{Id: 3, Title: "スノボ", Done: false},
-	}
+	//items := []models.Item{
+	//	{Title: "筋トレ", Done: false},
+	//	{Title: "サッカー", Done: true},
+	//	{Title: "スノボ", Done: false},
+	//}
 
-	itemRepository := repositories.NewItemMemoryRepository(items)
+	//itemRepository := repositories.NewItemMemoryRepository(items)
+	db := infra.SetupDB()
+	itemRepository := repositories.NewItemRepository(db)
 	itemService := services.NewItemService(itemRepository)
 	itemController := controllers.NewItemController(itemService)
 

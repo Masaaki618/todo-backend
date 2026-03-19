@@ -9,7 +9,7 @@ services:
         condition: service_healthy
     environment:
       APP_ADDR: 0.0.0.0:8080
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgres://todo:todo@db:5432/todo?sslmode=disable&TimeZone=Asia/Tokyo
     ports:
       - "8080:8080"
     volumes:
