@@ -6,9 +6,39 @@ info:
 servers:
   - url: http://localhost:8080
 tags:
+  - name: Auth
+    description: 認証 API
   - name: Items
     description: Todo item API
 paths:
+  /api/v1/auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: ユーザー登録
+      operationId: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpInput'
+      responses:
+        '201':
+          description: 登録成功
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/items:
     get:
       tags:
@@ -166,6 +196,20 @@ components:
         done:
           type: boolean
           example: false
+    SignUpInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          minLength: 6
+          example: password123
     CreateItemInput:
       type: object
       required:
