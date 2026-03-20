@@ -2,3 +2,5 @@ tmp/
 .env
 docker/pgadmin/
 claude-code.config.json
+.serena/
+data/
